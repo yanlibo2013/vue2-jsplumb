@@ -1,0 +1,259 @@
+/**
+ * ------------------------------------------------------------------
+ * el 覆盖样式
+ * ------------------------------------------------------------------
+ */
+
+/**
+ * 菜单 nav
+ * ------------------------------------------------------------------
+ */
+.el-menu--popup-bottom-start {
+    margin-top: 2px;
+}
+.el-menu--collapse .el-menu .el-submenu, .el-menu--popup{
+    min-width: 150px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    color: inherit;
+    background-color: white!important;
+    padding: 0px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.el-menu-item:focus, .el-menu-item:hover{
+    background: #e5e5e5!important;
+}
+.el-menu-item, .el-menu-item{
+    background: #fff!important;
+    color: #373a3c!important;
+}
+.el-menu--horizontal .el-menu .el-menu-item.is-active, .el-menu--horizontal .el-menu .el-submenu.is-active>.el-submenu__title{
+    color: #3b78e7!important;
+}
+.el-menu-item i{
+    color: #373a3c;
+}
+
+/**
+ * 下拉框 select
+ * ------------------------------------------------------------------
+ */
+.el-popper[x-placement^=bottom]{
+    margin-top: 0px;
+}
+.el-dropdown-menu{
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    color: inherit;
+    background-color: white;
+    border-radius: 0;
+    min-width: 150px;
+    max-width: 210px;
+    padding: 0px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.el-dropdown-menu__item{
+    padding: 0px;
+    background: #fff!important;
+    color: #373a3c!important;
+}
+.el-dropdown-menu__item i{
+    margin-left: 20px;
+}
+.dLinkLi{
+    text-decoration: none;
+    float: left;
+    width: 100%;
+    padding: 0px;
+    color: #666666;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+}
+.dLinkLi a{
+    float: left;
+    width: 100%;
+}
+.el-dropdown-menu__item:focus, .el-dropdown-menu__item:hover{
+    background: #e5e5e5!important;
+}
+.el-dropdown-menu__item a{
+    padding: 0 20px;
+    width: 100%;
+}
+.el-dropdown-menu__item:focus, .el-dropdown-menu__item a:hover{
+    background: #e5e5e5!important;
+}
+.el-dropdown-menu{
+    max-height: 95%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.el-popper[x-placement^=bottom] .popper__arrow{
+    visibility: hidden;
+}
+
+.el-select-dropdown__list{
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    color: inherit;
+    background-color: white;
+    border-radius: 0;
+    padding: 0px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.el-select-dropdown__item.hover, .el-select-dropdown__item:hover{
+    background: #e5e5e5;
+}
+.el-select-dropdown__item.active{
+    background: #e5e5e5;
+    color: #373a3c!important;
+}
+/* 流程管理 设计 历史 下拉框 */
+.drawHisSel{
+    top: 91px!important;
+    max-height: calc(100% - 100px);
+    margin-left: 200px;
+    min-width: 50px!important;
+}
+.drawHisSel .el-dropdown-menu__item{
+    text-align: center;
+}
+
+/**
+ * 输入框 input
+ * ------------------------------------------------------------------
+ */
+.el-input__inner{
+    padding: 1px 10px;
+    height: 32px;
+    line-height: 32px;
+}
+
+.el-message-box__btns button{
+    float: right;
+    margin-right: 5px;
+    padding: 0.4rem 0.8rem;
+}
+
+/**
+ * 弹出框 dialog
+ * ------------------------------------------------------------------
+ */
+.el-dialog__body{
+    padding: 15px;
+}
+.el-dialog{
+    width: 80%;
+    max-height: 80%;
+    overflow: auto;
+    margin-top: 10vh!important;
+}
+.designDialog .el-dialog{
+    width: 70%;
+}
+.dialogClass{
+    width: 80%;
+    height: 80%;
+    margin-top: 10vh!important;
+}
+.dialogClass .elForm{
+    padding: 0px!important;
+}
+.redialogClass .el-dialog__body{
+    padding: 0px!important;
+}
+.dialogClass .dt-content{
+    height: calc(80vh - 160px)!important;
+}
+.dialogClass .content{
+    height: calc(100% - 0px)!important;
+}
+.dialogClass .dtTableLeft{
+    overflow-x:hidden!important;
+}
+.dialogClass .dtTableRight{
+    height: calc(100% - 0px)!important;
+}
+.dialogClass .el-dialog__footer{
+    position: absolute;
+    bottom:0px;
+    width: 100%;
+    border-top: 1px solid #eeeeee;
+    box-shadow: 0px 1px 5px 0 rgba(0, 0, 0, 0.1);
+    right: 0px;
+    height: 60px;
+    line-height: 30px;
+    text-align: right;
+    box-sizing: border-box;
+}
+.dialogClass .dt-content .dtTableLeft{
+    border-right: none;
+    box-shadow: 0px 1px 5px 0 rgba(0, 0, 0, 0.1);
+}
+.el-dialog__header{
+    background-color: #4c4c51;
+    padding: 10px 20px 10px 20px;
+}
+.el-dialog__title{
+    color: #FFFFFF;
+    font-size: 16px;
+}
+.el-dialog__headerbtn{
+    top: 13px;
+}
+.el-dialog__headerbtn .el-dialog__close{
+    color: #eeeeee;
+}
+.el-button--primary{
+    background-color: #3895ff;
+    border-color: #3895ff;
+}
+.el-form-item{
+    margin-bottom: 15px;
+}
+
+.dialog2Class{
+    width: 80%;
+    max-height: 80%;
+    margin-top: 10vh!important;
+}
+.dialog2Class .elForm{
+    padding: 15px!important;
+}
+.dialog2Class .el-dialog__body{
+    max-height: calc(80vh - 120px)!important;
+    overflow: auto;
+    margin-bottom: 60px;
+}
+.dialog2Class .el-collapse-item__wrap{
+    border-bottom: none;
+}
+.dialog2Class .el-collapse-item__content{
+    padding: 0px;
+}
+.dialog2Class .el-dialog__footer{
+    position: absolute;
+    bottom:0px;
+    width: 100%;
+    background: #ffffff;
+    border-top: 1px solid #eeeeee;
+    box-shadow: 0px 1px 5px 0 rgba(0, 0, 0, 0.1);
+    right: 0px;
+    height: 60px;
+    line-height: 30px;
+    text-align: right;
+    box-sizing: border-box;
+}
+.dialog2Class .dt-content .dtTableLeft{
+    border-right: none;
+    box-shadow: 0px 1px 5px 0 rgba(0, 0, 0, 0.1);
+}
+
+/**
+ * 日期 date
+ * ------------------------------------------------------------------
+ */
+.el-date-editor .el-range-separator{
+    width: 10%;
+}
+
+
+
