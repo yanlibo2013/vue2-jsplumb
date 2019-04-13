@@ -24,6 +24,7 @@
 			</el-submenu>
 			<el-menu-item index="/drag-to-workplace">drag to workplace</el-menu-item>
 			<el-menu-item index="/demo-chart">demo-chart</el-menu-item>
+			<el-menu-item index="/demo-flow">demo-work-flow</el-menu-item>
 		</el-menu>
 	</div>
 </template>

@@ -21,6 +21,10 @@ import 'jsplumb/css/jsplumbtoolkit-defaults.css';
 // html2canvas
 import html2canvas from 'html2canvas';
 
+
+import VueDragDrop from 'vue-drag-drop';
+
+Vue.use(VueDragDrop);
 Vue.use(ElementUI);
 
 Vue.config.productionTip = false

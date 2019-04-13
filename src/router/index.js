@@ -11,6 +11,7 @@ import routeDemos from './route-demo'
 // DragToWorkplace
 import DragToWorkplace from '@/views/DragToWorkplace'
 import DemoChart from '@/views/DemoChart'
+import DemoFlow from '@/views/DemoFlow'
 
 
 Vue.use(Router)
@@ -36,11 +37,11 @@ export default new Router({
       path: '/demo-chart',
       name: 'DemoChart',
       component: DemoChart,
-      /* children: [
-        {
-          path:''
-        }
-      ] */
+    },
+    {
+      path: '/demo-flow',
+      name: 'DemoFlow',
+      component: DemoFlow,
     }
     
   ]
