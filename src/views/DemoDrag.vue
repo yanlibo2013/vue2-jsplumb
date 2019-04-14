@@ -20,6 +20,8 @@ export default {
     };
   },
   mounted() {
+
+    console.log(" drag drp[//////////////////////////////////////////////////");
     // 创建元素
     function addItem(parentId, nodeId, nodeLable, position) {
       var panel = $("#" + parentId);
@@ -71,6 +73,8 @@ export default {
         });
       }
     }
+    
+    //
     jsPlumb.ready(function() {
       var color = "#37bfb8";
       var instance = jsPlumb.getInstance({
@@ -96,7 +100,7 @@ export default {
               location: 1,
               id: "arrow",
               length: 14,
-              foldback: 1 //这些都是控制箭头的形状的(0.8)
+              foldback: 1 //这些都是控制箭头的形状的(0.8) 111
             }
           ]
         ]

@@ -314,7 +314,7 @@ export default {
           {
             stub: [30, 60],
             gap: 10,
-            cornerRadius: 5, //转角
+            cornerRadius: 5, //转角111132131
             alwaysRespectStubs: true
           }
         ], // 连接线的样式种类有[Bezier], [Flowchart], [StateMachine], [Straight]
@@ -333,7 +333,6 @@ export default {
         Container: "workplace"
       });
       this.jsp = instance;
-
       var canvas = document.getElementById("workplace");
 
       // 删除连接线

@@ -28,6 +28,8 @@ export default {
     };
   },
   mounted() {
+
+    //
     jsPlumb.ready(function() {
       // 默认配置
       let instance = jsPlumb.getInstance({
@@ -160,7 +162,9 @@ export default {
         }
       };
 
-      // 暂停渲染，执行以下操作
+
+
+      // 暂停渲染，执行以下操作 111
       instance.batch(function() {
         // listen for new connections;
         instance.bind("connection", function(connInfo, originalEvent) {

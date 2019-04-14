@@ -1,36 +1,38 @@
 <template>
-  <ul class="step-list">
-    <li
-      v-for="(item) in steps"
-      :id="item.id"
-      :key="item.id"
-      class="step-item"
-      :data-addEndpoint="customStep(item.id, item.type)"
-      :style="{
+  <drop class="workplace" @drop="handleDrop" id="workplace">
+    <ul class="step-list">
+      <li
+        v-for="(item) in steps"
+        :id="item.id"
+        :key="item.id"
+        class="step-item"
+        :data-addEndpoint="customStep(item.id, item.type)"
+        :style="{
         left: item.x +'px',
         top: item.y +'px',
         color: returnColorByType(item.type),
         borderColor: returnColorByType(item.type)
       }"
-      @dblclick="querySourceData(item.id, item.type)"
-    >
-      <dl>
-        <dt>
-          <i :class="returnIconByType(item.type)"/>
-        </dt>
-        <dd>
-          <p class="step-name">{{ item.name }}</p>
-          <p class="step-id">ID: {{ item.name }}</p>
-        </dd>
-      </dl>
-      <div class="operation">
-        <span>
-          <i class="el-icon-star-off"/>
-          <i class="el-icon-delete"/>
-        </span>
-      </div>
-    </li>
-  </ul>
+        @dblclick="querySourceData(item.id, item.type)"
+      >
+        <dl>
+          <dt>
+            <i :class="returnIconByType(item.type)"/>
+          </dt>
+          <dd>
+            <p class="step-name">{{ item.name }}</p>
+            <p class="step-id">ID: {{ item.name }}</p>
+          </dd>
+        </dl>
+        <div class="operation">
+          <span>
+            <i class="el-icon-star-off"/>
+            <i class="el-icon-delete"/>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </drop>
 </template>
 <script>
 export default {
@@ -102,11 +104,79 @@ export default {
   mounted() {
     console.log("子组件 mounted");
 
+    this.init([]);
 
-
-    this.init(this.steps);
+    // this.init([ {
+    //       'id': 'source_1',
+    //       'name': 'source_1',
+    //       'type': 'source',
+    //       'x': 249,
+    //       'y': 162
+    //     },
+    //     {
+    //       'id': 'sink_1',
+    //       'name': 'sink_1',
+    //       'type': 'sink',
+    //       'x': 504,
+    //       'y': 156
+    //     },
+    //     {
+    //       'id': 'validate_1',
+    //       'name': 'validate_1',
+    //       'type': 'validate',
+    //       'x': 704,
+    //       'y': 256
+    //     },
+    //     {
+    //       'id': 'join_4',
+    //       'name': 'join_4',
+    //       'type': 'join',
+    //       'x': 204,
+    //       'y': 356
+    //     },
+    //     {
+    //       'id': 'transform_4',
+    //       'name': 'transform_4',
+    //       'type': 'transform',
+    //       'x': 504,
+    //       'y': 356
+    //     }]);
   },
   methods: {
+        handleDrop(data, event) {
+      //alert(`You dropped with data: ${JSON.stringify(data)}`);
+      console.log(data);
+      console.log(event);
+
+      // this.$refs.flowpanel.nodes.push({
+      //   id: data.item.id,
+      //   name: data.item.id,
+      //   type: data.item.name,
+      //   x: event.x,
+      //   y: event.y
+      // });
+      
+
+      
+      //  top: ui.position.top - 60 + "px",
+      //       left: ui.position.left - 200 + "px"
+      let id = jsPlumbUtil.uuid();
+      let currentItem = {
+        id,
+        name: data.item.id,
+        type: data.item.name,
+        x: event.screenX - 250,
+        y: event.screenY - 200
+      };
+
+      this.steps.push(currentItem);
+
+      this.$nextTick(() => {
+        console.log(this.steps);
+        // console.log(this.$refs.flowpanel.nodes);
+        this.initNode(currentItem.id);
+      });
+    },
     // 根据类型返回 ICON
     returnIconByType(type) {
       if (type === "sink") {
@@ -172,20 +242,28 @@ export default {
     // 连线初始化配置
     init(data) {
       jsPlumb.ready(() => {
-        jsPlumb.setContainer("step-list");
-        // 数据集连线的实例
-        this.jsplumbInstance = jsPlumb.getInstance();
-          this.jsplumbInstance.empty("step-list");
+        //jsPlumb.setContainer("step-list");
+        // 数据集连线的实例111sdfdsgvfds
+
+        this.jsplumbInstance = jsPlumb.getInstance({ Container: "step-list" });
+        // this.jsplumbInstance.empty("step-list");
+        //  this.jsplumbInstance.empty("workplace");
+
         this.steps = data;
 
-        console.log("data",data);
-        console.log("对象促使", this.jsplumbInstance);
+        // jsPlumb.detachEveryConnection();
+
+        //  this.jsplumbInstance.deleteEveryEndpoint();
+
+        // this.jsplumbInstance.empty("workplace");
         // 连线成功的处理
+
         this.connectionSuccess();
         this.defaultConenction();
         // 给每个元素添加拖拽事件
 
         this.$nextTick(() => {
+          //jsPlumb.empty("workplace");
           let element = this.jsplumbInstance.getSelector(".step-item");
           this.jsplumbInstance.draggable(element);
           this.jsplumbInstance.fire("jsPlumbDemoLoaded", this.jsplumbInstance);
@@ -354,7 +432,6 @@ export default {
         let labels = value.label ? value.label(type)[index++] : "";
         let sign = labels ? labels[1]["label"] + "_" + element : element;
         this.$nextTick(() => {
-          console.log("/////////////////////", this.jsplumbInstance);
           this.jsplumbInstance.addEndpoint(
             element,
             {
@@ -451,45 +528,51 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.step-list {
-  line-height: 1;
+.workplace {
+  width: 100%;
   height: 100%;
-  //position: relative;
-  li {
-    cursor: pointer;
-    border-width: 2px;
-    border-style: solid;
-    box-shadow: 0 10px 18px -9px rgba(0, 0, 0, 0.5);
-    background: #ffffff;
-    height: 70px;
-    width: 150px;
-    position: absolute;
-    dl {
-      display: flex;
-      padding: 4px;
-      dt {
-        margin-right: 5px;
-        i {
-          font-size: 30px;
+  position: relative;
+  background-image: url("../assets/img/designBg.png");
+  .step-list {
+    line-height: 1;
+    height: 100%;
+    //position: relative;
+    li {
+      cursor: pointer;
+      border-width: 2px;
+      border-style: solid;
+      box-shadow: 0 10px 18px -9px rgba(0, 0, 0, 0.5);
+      background: #ffffff;
+      height: 70px;
+      width: 150px;
+      position: absolute;
+      dl {
+        display: flex;
+        padding: 4px;
+        dt {
+          margin-right: 5px;
+          i {
+            font-size: 30px;
+          }
+        }
+        .step-name {
+          font-size: 14px;
+          font-weight: 900;
+          width: 100px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .step-id {
+          margin-top: 3px;
+          font-size: 10px;
         }
       }
-      .step-name {
-        font-size: 14px;
-        font-weight: 900;
-        width: 100px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .step-id {
-        margin-top: 3px;
-        font-size: 10px;
-      }
-    }
-    .operation {
-      padding-right: 10px;
-      span {
-        float: right;
+      .operation {
+        padding-right: 10px;
+        span {
+          float: right;
+        }
       }
     }
   }

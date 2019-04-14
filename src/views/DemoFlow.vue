@@ -23,11 +23,13 @@
     <el-main>
       <!-- <el-button class="btn-save" @click="saveChart" type="success">保存</el-button> -->
       <!-- <el-button class="btn-save-img" @click="saveChartImg" type="info">保存为图片</el-button> -->
-      <drop class="workplace" @drop="handleDrop">
-        <div class="work-flow-panel" id="workplace">
+
+      <!-- <drop class="workplace" @drop="handleDrop" id="workplace">
+        <div class="work-flow-panel" >
           <flow-panel ref="flowpanel"/>
         </div>
-      </drop>
+      </drop>-->
+      <flow-panel ref="flowpanel"/>
     </el-main>
     <el-aside width="300px">
       <right-aside></right-aside>
@@ -114,6 +116,7 @@ export default {
         //   name: "模板二",
         //   key: "json.2"
         // }
+        ///
       ],
       list: [
         [
@@ -191,6 +194,7 @@ export default {
   },
   created() {},
   mounted() {
+    //
     // this.$refs.flowpanel.nodes.push({
     //   id: "source_1",
     //   name: "source_1",
@@ -505,40 +509,7 @@ export default {
         }
       });
     },
-    handleDrop(data, event) {
-      //alert(`You dropped with data: ${JSON.stringify(data)}`);
-      console.log(data);
-      console.log(event);
 
-      // this.$refs.flowpanel.nodes.push({
-      //   id: data.item.id,
-      //   name: data.item.id,
-      //   type: data.item.name,
-      //   x: event.x,
-      //   y: event.y
-      // });
-
-      //  top: ui.position.top - 60 + "px",
-      //       left: ui.position.left - 200 + "px"
-  let id = jsPlumbUtil.uuid();
-      let currentItem = {
-         id,
-        name: data.item.id,
-        type: data.item.name,
-        x: event.screenX - 250,
-        y: event.screenY - 200
-      };
-
-      this.$refs.flowpanel.steps.push(currentItem);
-
-      this.$nextTick(() => {
-          console.log(this.$refs.flowpanel.steps);
-        // console.log(this.$refs.flowpanel.nodes);
-        this.$refs.flowpanel.initNode(currentItem.id);
-
-      
-      });
-    }
 
     // 根据类型返回 ICON
   },
@@ -576,54 +547,46 @@ export default {
 };
 </script>
 <style lang="scss">
-.workplace {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  background-image: url("../assets/img/designBg.png");
-
-  
-
-  .flow-node {
-    line-height: 1;
-    cursor: pointer;
-    border-width: 2px;
-    border-style: solid;
-    box-shadow: 0 10px 18px -9px rgba(0, 0, 0, 0.5);
-    background: #ffffff;
-    height: 70px;
-    width: 150px;
-    position: absolute;
-    dl {
-      display: flex;
-      padding: 4px;
-      dt {
-        margin-right: 5px;
-        i {
-          font-size: 30px;
-        }
-      }
-      .step-name {
-        font-size: 14px;
-        font-weight: 900;
-        width: 100px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .step-id {
-        margin-top: 3px;
-        font-size: 10px;
+.flow-node {
+  line-height: 1;
+  cursor: pointer;
+  border-width: 2px;
+  border-style: solid;
+  box-shadow: 0 10px 18px -9px rgba(0, 0, 0, 0.5);
+  background: #ffffff;
+  height: 70px;
+  width: 150px;
+  position: absolute;
+  dl {
+    display: flex;
+    padding: 4px;
+    dt {
+      margin-right: 5px;
+      i {
+        font-size: 30px;
       }
     }
-    .operation {
-      padding-right: 10px;
-      span {
-        float: right;
-      }
+    .step-name {
+      font-size: 14px;
+      font-weight: 900;
+      width: 100px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .step-id {
+      margin-top: 3px;
+      font-size: 10px;
+    }
+  }
+  .operation {
+    padding-right: 10px;
+    span {
+      float: right;
     }
   }
 }
+
 #start {
   top: 50px;
   left: 50px;
