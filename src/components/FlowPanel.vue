@@ -33,7 +33,6 @@
   </ul>
 </template>
 <script>
-import { jsPlumb } from "jsplumb";
 export default {
   components: {},
   data() {
@@ -97,12 +96,49 @@ export default {
   },
   created() {
     console.log("子组件 created");
-    this.init();
 
     console.log("子组件 nextTick");
   },
   mounted() {
     console.log("子组件 mounted");
+
+    this.init([
+      // {
+      //   id: "source_1",
+      //   name: "source_1",
+      //   type: "source",
+      //   x: 249,
+      //   y: 162
+      // },
+      // {
+      //   id: "sink_1",
+      //   name: "sink_1",
+      //   type: "sink",
+      //   x: 504,
+      //   y: 156
+      // },
+      // {
+      //   id: "validate_1",
+      //   name: "validate_1",
+      //   type: "validate",
+      //   x: 704,
+      //   y: 256
+      // },
+      // {
+      //   id: "join_4",
+      //   name: "join_4",
+      //   type: "join",
+      //   x: 204,
+      //   y: 356
+      // },
+      // {
+      //   id: "transform_4",
+      //   name: "transform_4",
+      //   type: "transform",
+      //   x: 504,
+      //   y: 356
+      // }
+    ]);
   },
   methods: {
     // 根据类型返回 ICON
@@ -125,56 +161,52 @@ export default {
         return "#4586f3";
       }
     },
+    // 初始化node节点
+    initNode(el) {
+      // initialise draggable elements.
+      // 元素拖动，基于 katavorio.js 插件
+      console.log("初始化节点", el);
+      let _self = this;
+      this.jsplumbInstance.draggable(el, {
+        filter: ".resize",
+        // containment: true,
+        start(params) {
+          // 拖动开始
+          // console.log(params);
+        },
+        drag(params) {
+          // 拖动中
+          // console.log(params);
+        },
+        stop(params) {
+          // 拖动结束
+          // console.log(params);
+          // let id = params.el.id;
+          // _self.$nextTick(() => {
+          //   let top = params.el.style.top;
+          //   let left = params.el.style.left;
+          //   _self.chartData.nodes.forEach(item => {
+          //     if (item.id === id) {
+          //       item.nodeStyle.left = left;
+          //       item.nodeStyle.top = top;
+          //     }
+          //   });
+          // });
+        }
+      });
+
+      // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
+      // version of this demo to find out about new nodes being added.
+
+      this.jsplumbInstance.fire("jsPlumbDemoNodeAdded", el);
+    },
     // 连线初始化配置
-    init() {
+    init(data) {
       jsPlumb.ready(() => {
         jsPlumb.setContainer("step-list");
         // 数据集连线的实例
         this.jsplumbInstance = jsPlumb.getInstance();
-        this.steps = [
-          // {
-          //   'id': 'source_2',
-          //   'name': 'source_2',
-          //   'type': 'source',
-          //   'x': 1000,
-          //   'y': 162
-          // },
-          {
-            id: "source_1",
-            name: "source_1",
-            type: "source",
-            x: 249,
-            y: 162
-          },
-          {
-            id: "sink_1",
-            name: "sink_1",
-            type: "sink",
-            x: 504,
-            y: 156
-          },
-          {
-            id: "validate_1",
-            name: "validate_1",
-            type: "validate",
-            x: 704,
-            y: 256
-          },
-          {
-            id: "join_4",
-            name: "join_4",
-            type: "join",
-            x: 204,
-            y: 356
-          },
-          {
-            id: "transform_4",
-            name: "transform_4",
-            type: "transform",
-            x: 504,
-            y: 356
-          }
-        ];
+        this.steps = data;
 
         console.log("对象促使", this.jsplumbInstance);
         // 连线成功的处理
@@ -451,7 +483,7 @@ export default {
 .step-list {
   line-height: 1;
   height: 100%;
-  position: relative;
+  //position: relative;
   li {
     cursor: pointer;
     border-width: 2px;

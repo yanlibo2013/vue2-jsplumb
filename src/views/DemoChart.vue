@@ -433,6 +433,8 @@ export default {
             type: helper.attr("data-type"),
             text: helper.attr("data-text"),
             nodeStyle: {
+              // top: ui.position.top - 60 + "px",
+              // left: ui.position.left - 200 + "px"
               top: ui.position.top - 60 + "px",
               left: ui.position.left - 200 + "px"
             }
@@ -445,8 +447,8 @@ export default {
 
           _self.$nextTick(() => {
             _self.initNode(id);
-          
-            console.log("获取dom元素",$("#"+id));
+
+            console.log("获取dom元素", $("#" + id));
             if (item.type === "group") {
               instance.addGroup({
                 el: document.getElementById(id), // 必须为 dom对象
@@ -480,9 +482,9 @@ export default {
     initNode(el) {
       // initialise draggable elements.
       // 元素拖动，基于 katavorio.js 插件
-      console.log("初始化节点",el);
+      console.log("初始化节点", el);
       let _self = this;
-        _self.switchType(el);
+      _self.switchType(el);
       this.jsp.draggable(el, {
         filter: ".resize",
         // containment: true,
@@ -538,7 +540,7 @@ export default {
 
       // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
       // version of this demo to find out about new nodes being added.
-      
+
       this.jsp.fire("jsPlumbDemoNodeAdded", el);
     },
     // 保存
@@ -804,7 +806,6 @@ export default {
     },
 
     switchType(id) {
-
       // 添加端点
       jsPlumb.addEndpoint(
         id,
