@@ -20,7 +20,7 @@
         </dt>
         <dd>
           <p class="step-name">{{ item.name }}</p>
-          <p class="step-id">ID: {{ item.id }}</p>
+          <p class="step-id">ID: {{ item.name }}</p>
         </dd>
       </dl>
       <div class="operation">
@@ -102,43 +102,9 @@ export default {
   mounted() {
     console.log("子组件 mounted");
 
-    this.init([
-      // {
-      //   id: "source_1",
-      //   name: "source_1",
-      //   type: "source",
-      //   x: 249,
-      //   y: 162
-      // },
-      // {
-      //   id: "sink_1",
-      //   name: "sink_1",
-      //   type: "sink",
-      //   x: 504,
-      //   y: 156
-      // },
-      // {
-      //   id: "validate_1",
-      //   name: "validate_1",
-      //   type: "validate",
-      //   x: 704,
-      //   y: 256
-      // },
-      // {
-      //   id: "join_4",
-      //   name: "join_4",
-      //   type: "join",
-      //   x: 204,
-      //   y: 356
-      // },
-      // {
-      //   id: "transform_4",
-      //   name: "transform_4",
-      //   type: "transform",
-      //   x: 504,
-      //   y: 356
-      // }
-    ]);
+
+
+    this.init(this.steps);
   },
   methods: {
     // 根据类型返回 ICON
@@ -173,13 +139,16 @@ export default {
         start(params) {
           // 拖动开始
           // console.log(params);
+          console.log("拖动开始");
         },
         drag(params) {
           // 拖动中
+          console.log("拖动中");
           // console.log(params);
         },
         stop(params) {
           // 拖动结束
+          console.log("拖动介绍");
           // console.log(params);
           // let id = params.el.id;
           // _self.$nextTick(() => {
@@ -206,8 +175,10 @@ export default {
         jsPlumb.setContainer("step-list");
         // 数据集连线的实例
         this.jsplumbInstance = jsPlumb.getInstance();
+          this.jsplumbInstance.empty("step-list");
         this.steps = data;
 
+        console.log("data",data);
         console.log("对象促使", this.jsplumbInstance);
         // 连线成功的处理
         this.connectionSuccess();
