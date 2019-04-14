@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from "./store/index";
 
 // axios
 import axios from 'axios'
@@ -15,8 +16,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './style/index.scss';
 import './style/jsplumb-demo.scss';
 // jsplumb
-import 'jsplumb/dist/js/jsplumb.min.js';
-import 'jsplumb/css/jsplumbtoolkit-defaults.css';
+// import 'jsplumb/dist/js/jsplumb.min.js';
+// import 'jsplumb/css/jsplumbtoolkit-defaults.css';
 
 // html2canvas
 import html2canvas from 'html2canvas';
@@ -32,6 +33,7 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   components: { App },
   template: '<App/>'

@@ -467,12 +467,12 @@ export default {
       });
 
       // 暂停渲染，执行以下操作
-      instance.batch(() => {
-        jsPlumb.getSelector(".workplace-chart").forEach(item => {
-          _self.initNode(item);
-        });
-      });
-      jsPlumb.fire("jsPlumbDemoLoaded", instance);
+      // instance.batch(() => {
+      //   jsPlumb.getSelector(".workplace-chart").forEach(item => {
+      //     _self.initNode(item);
+      //   });
+      // });
+      // jsPlumb.fire("jsPlumbDemoLoaded", instance);
     });
   },
   methods: {
