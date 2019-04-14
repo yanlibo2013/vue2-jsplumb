@@ -97,12 +97,12 @@ export default {
     };
   },
   created() {
-    console.log("子组件 created");
+    // console.log("子组件 created");
 
-    console.log("子组件 nextTick");
+    // console.log("子组件 nextTick");
   },
   mounted() {
-    console.log("子组件 mounted");
+    //console.log("子组件 mounted");
 
     this.init([]);
 
@@ -145,8 +145,8 @@ export default {
   methods: {
         handleDrop(data, event) {
       //alert(`You dropped with data: ${JSON.stringify(data)}`);
-      console.log(data);
-      console.log(event);
+      // console.log(data);
+      // console.log(event);
 
       // this.$refs.flowpanel.nodes.push({
       //   id: data.item.id,
@@ -172,7 +172,7 @@ export default {
       this.steps.push(currentItem);
 
       this.$nextTick(() => {
-        console.log(this.steps);
+        //console.log(this.steps);
         // console.log(this.$refs.flowpanel.nodes);
         this.initNode(currentItem.id);
       });
@@ -201,24 +201,24 @@ export default {
     initNode(el) {
       // initialise draggable elements.
       // 元素拖动，基于 katavorio.js 插件
-      console.log("初始化节点", el);
+      //console.log("初始化节点", el);
       let _self = this;
       this.jsplumbInstance.draggable(el, {
         filter: ".resize",
-        // containment: true,
+        containment: true,//true  限制节点拖动区域
         start(params) {
           // 拖动开始
           // console.log(params);
-          console.log("拖动开始");
+          //console.log("拖动开始");
         },
         drag(params) {
           // 拖动中
-          console.log("拖动中");
+          //console.log("拖动中");
           // console.log(params);
         },
         stop(params) {
           // 拖动结束
-          console.log("拖动介绍");
+         /// console.log("拖动介绍");
           // console.log(params);
           // let id = params.el.id;
           // _self.$nextTick(() => {
@@ -242,14 +242,17 @@ export default {
     // 连线初始化配置
     init(data) {
       jsPlumb.ready(() => {
-        //jsPlumb.setContainer("step-list");
+       
         // 数据集连线的实例111sdfdsgvfds
 
-        this.jsplumbInstance = jsPlumb.getInstance({ Container: "step-list" });
+        this.jsplumbInstance = jsPlumb.getInstance();
         // this.jsplumbInstance.empty("step-list");
         //  this.jsplumbInstance.empty("workplace");
 
         this.steps = data;
+
+         this.jsplumbInstance.setContainer("workplace");
+         //jsPlumb.Defaults.Container = $('#workplace');
 
         // jsPlumb.detachEveryConnection();
 
