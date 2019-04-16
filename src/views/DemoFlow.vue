@@ -294,12 +294,117 @@ export default {
     handleClickTemp(key) {
       console.log("点击模板", key);
 
-      this.chartData = {
-        nodes: [],
-        connections: [],
+      // let data = {
+      //   nodes: [
+      //     { id: "source_1", name: "source_1", type: "source", x: 249, y: 162 },
+      //     {
+      //       id: "7bf74499-2fee-4792-bfa0-ed047551e096",
+      //       name: "spark_join",
+      //       type: "join",
+      //       x: 747,
+      //       y: 177
+      //     },
+      //     {
+      //       id: "3e97cbdc-7b0e-4661-82e4-f3d9540c6b83",
+      //       name: "spark_source",
+      //       type: "source",
+      //       x: 113,
+      //       y: 294
+      //     }
+      //   ],
+      //   connections: [
+      //     //uuid: value.type + "_" + sign,
+      //     {
+      //       targetId: "7bf74499-2fee-4792-bfa0-ed047551e096",
+      //       sourceId: "source_1"
+      //     },
+      //     {
+      //       targetId: "7bf74499-2fee-4792-bfa0-ed047551e096",
+      //       sourceId: "3e97cbdc-7b0e-4661-82e4-f3d9540c6b83"
+      //     }
+      //   ],
+      //   props: {}
+      // };
+
+      let data = {
+        nodes: [
+          {
+            id: "b4fbda07-cfa1-4246-9cda-fb25ea1e72f2",
+            name: "spark_source",
+            type: "source",
+            x: 339,
+            y: 86
+          },
+          {
+            id: "05318579-ec23-4444-9f06-2b68e9642581",
+            name: "spark_starjoin",
+            type: "starjoin",
+            x: 944,
+            y: 149
+          }
+        ],
+        connections: [
+          // //uuid: value.type + "_" + sign,
+          {
+            targetId: "source_05318579-ec23-4444-9f06-2b68e9642581",
+            sourceId: "starjoin_b4fbda07-cfa1-4246-9cda-fb25ea1e72f2"
+          }
+        ],
         props: {}
       };
-      this.jsp.empty("workplace");
+
+      this.$refs.flowpanel.chartData = data;
+
+      this.$nextTick(() => {
+        this.$refs.flowpanel.draw(data);
+      });
+
+      // this.$refs.flowpanel.chartData = {
+      //   nodes: [
+      //         {
+      //     'id': 'source_1',
+      //     'name': 'source_1',
+      //     'type': 'source',
+      //     'x': 249,
+      //     'y': 162
+      //   },
+      //   ],
+      //   connections: [],
+      //   props: {}
+      // };
+
+      // this.$refs.flowpanel.init( [
+      //         {
+      //     'id': 'source_1',
+      //     'name': 'source_1',
+      //     'type': 'source',
+      //     'x': 249,
+      //     'y': 162
+      //   },]
+      //   );
+
+      //     this.$refs.flowpanel.jsplumbInstance.empty("workplace");
+      //       this.$refs.flowpanel.chartData = {
+      //   nodes: [
+      //   ],
+      //   connections: [],
+      //   props: {}
+      // };
+
+      // this.$refs.flowpanel.init( [
+      //       {
+      //   'id': 'source_1',
+      //   'name': 'source_1',
+      //   'type': 'source',
+      //   'x': 249,
+      //   'y': 162
+      // },]
+      // );
+
+      //console.log("清空操作",this.$refs.flowpanel.chartData);
+
+      return;
+
       if (key) {
         this.templateList.forEach(item => {
           if (item.key === key) {
@@ -508,8 +613,7 @@ export default {
           saveFile(image, filename);
         }
       });
-    },
-
+    }
 
     // 根据类型返回 ICON
   },

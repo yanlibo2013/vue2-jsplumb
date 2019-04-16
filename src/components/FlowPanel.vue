@@ -2,18 +2,17 @@
   <drop class="workplace" @drop="handleDrop" id="workplace">
     <ul class="step-list">
       <li
-        v-for="(item) in steps"
+        v-for="(item) in chartData.nodes"
         :id="item.id"
         :key="item.id"
+          :addEndpoint="customStep(item.id, item.type)"
         class="step-item"
-        :data-addEndpoint="customStep(item.id, item.type)"
         :style="{
         left: item.x +'px',
         top: item.y +'px',
         color: returnColorByType(item.type),
         borderColor: returnColorByType(item.type)
       }"
-        @dblclick="querySourceData(item.id, item.type)"
       >
         <dl>
           <dt>
@@ -31,16 +30,51 @@
           </span>
         </div>
       </li>
+      <!-- <li
+        v-for="(item) in chartData.nodes"
+        :id="item.id"
+        :key="item.id"
+        class="step-item"
+        :addEndpoint="customStep(item.id, item.type)"
+        :style="{
+        left: item.x +'px',
+        top: item.y +'px',
+        color: returnColorByType(item.type),
+        borderColor: returnColorByType(item.type)
+      }"
+      >
+        <dl>
+          <dt>
+            <i :class="returnIconByType(item.type)"/>
+          </dt>
+          <dd>
+            <p class="step-name">{{ item.name }}</p>
+            <p class="step-id">ID: {{ item.name }}</p>
+          </dd>
+        </dl>
+        <div class="operation">
+          <span>
+            <i class="el-icon-star-off"/>
+            <i class="el-icon-delete"/>
+          </span>
+        </div>
+      </li>-->
     </ul>
   </drop>
 </template>
 <script>
+import { type } from "os";
 export default {
   components: {},
   data() {
     return {
       jsplumbInstance: null,
-      steps: [],
+      //chartData: [],
+      chartData: {
+        nodes: [],
+        connections: [],
+        props: {}
+      },
       querySourceMap: {},
       links: [],
       connectorPaintStyle: {
@@ -96,17 +130,28 @@ export default {
       }
     };
   },
+
+  //
   created() {
     // console.log("子组件 created");
-
     // console.log("子组件 nextTick");
   },
   mounted() {
-    //console.log("子组件 mounted");
+    console.log("子组件 mounted");
+    this.init();
 
-    this.init([]);
+    // this.init([
+    //           {
+    //       'id': 'source_1',
+    //       'name': 'source_1',
+    //       'type': 'source',
+    //       'x': 249,
+    //       'y': 162
+    //     },
+    //     ]);
 
-    // this.init([ {
+    // this.init([
+    // {
     //       'id': 'source_1',
     //       'name': 'source_1',
     //       'type': 'source',
@@ -142,8 +187,13 @@ export default {
     //       'y': 356
     //     }]);
   },
+  updated(){
+      // this.$nextTick(() => {
+      //   this.customStep(item.id, item.type)
+      // });
+  },
   methods: {
-        handleDrop(data, event) {
+    handleDrop(data, event) {
       //alert(`You dropped with data: ${JSON.stringify(data)}`);
       // console.log(data);
       // console.log(event);
@@ -155,9 +205,7 @@ export default {
       //   x: event.x,
       //   y: event.y
       // });
-      
 
-      
       //  top: ui.position.top - 60 + "px",
       //       left: ui.position.left - 200 + "px"
       let id = jsPlumbUtil.uuid();
@@ -169,12 +217,14 @@ export default {
         y: event.screenY - 200
       };
 
-      this.steps.push(currentItem);
+      this.chartData.nodes.push(currentItem);
 
       this.$nextTick(() => {
         //console.log(this.steps);
         // console.log(this.$refs.flowpanel.nodes);
-        this.initNode(currentItem.id);
+        this.initNode(currentItem);
+
+        console.log("拖动完成", this.chartData.nodes);
       });
     },
     // 根据类型返回 ICON
@@ -198,14 +248,14 @@ export default {
       }
     },
     // 初始化node节点
-    initNode(el) {
+    initNode(item) {
       // initialise draggable elements.
       // 元素拖动，基于 katavorio.js 插件
       //console.log("初始化节点", el);
       let _self = this;
-      this.jsplumbInstance.draggable(el, {
+      this.jsplumbInstance.draggable(item.id, {
         filter: ".resize",
-        containment: true,//true  限制节点拖动区域
+        containment: true, //true  限制节点拖动区域
         start(params) {
           // 拖动开始
           // console.log(params);
@@ -218,7 +268,7 @@ export default {
         },
         stop(params) {
           // 拖动结束
-         /// console.log("拖动介绍");
+          /// console.log("拖动介绍");
           // console.log(params);
           // let id = params.el.id;
           // _self.$nextTick(() => {
@@ -234,25 +284,29 @@ export default {
         }
       });
 
+      //        :addEndpoint="customStep(item.id, item.type)"
+
+        //this.customStep(item.id, item.type);
+
       // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
       // version of this demo to find out about new nodes being added.
 
-      this.jsplumbInstance.fire("jsPlumbDemoNodeAdded", el);
+      //this.jsplumbInstance.fire("jsPlumbDemoNodeAdded", item.id);
     },
     // 连线初始化配置
-    init(data) {
+    init() {
+      console.log("init");
       jsPlumb.ready(() => {
-       
         // 数据集连线的实例111sdfdsgvfds
 
         this.jsplumbInstance = jsPlumb.getInstance();
         // this.jsplumbInstance.empty("step-list");
         //  this.jsplumbInstance.empty("workplace");
 
-        this.steps = data;
+        //this.chartData.nodes = data;
 
-         this.jsplumbInstance.setContainer("workplace");
-         //jsPlumb.Defaults.Container = $('#workplace');
+        this.jsplumbInstance.setContainer("workplace");
+        //jsPlumb.Defaults.Container = $('#workplace');
 
         // jsPlumb.detachEveryConnection();
 
@@ -261,9 +315,11 @@ export default {
         // this.jsplumbInstance.empty("workplace");
         // 连线成功的处理
 
-        this.connectionSuccess();
-        this.defaultConenction();
+        //this.connectionSuccess();
+        //this.defaultConenction();
         // 给每个元素添加拖拽事件
+
+        this.bindEvent();
 
         this.$nextTick(() => {
           //jsPlumb.empty("workplace");
@@ -271,6 +327,95 @@ export default {
           this.jsplumbInstance.draggable(element);
           this.jsplumbInstance.fire("jsPlumbDemoLoaded", this.jsplumbInstance);
         });
+      });
+    },
+
+    /**
+     * @description 流程渲染
+     * @param {data} 流程数据
+     */
+    draw(data) {
+      let uuids = [];
+      data.nodes.forEach(item => {
+        uuids = this.initNode(item);
+
+        //console.log("///////////////uuids/////////////", uuids);
+      });
+      // this.jsp.empty();
+      data.connections.forEach(item => {
+        // this.jsplumbInstance.connect({
+        //   source: item.sourceId,
+        //   target: item.targetId
+        // });
+        jsPlumb.connect({uuids:[item.sourceId,item.targetId]})
+      });
+
+
+
+      //  this.jsplumbInstance.connect({uuids:["output_7bf74499-2fee-4792-bfa0-ed047551e096", "input_left_7bf74499-2fee-4792-bfa0-ed047551e096", "input_right_7bf74499-2fee-4792-bfa0-ed047551e096"]})
+    },
+
+    //jsplumb 事件监听
+    bindEvent() {
+      let _self = this;
+
+      // 监听 connection 事件
+      this.jsplumbInstance.bind("connection", function(info, event) {
+        // info.connection.getOverlay("label").setLabel(info.connection.id);
+        // console.log("监听 connection 事件",info);
+        // console.log(event);
+      });
+
+      // 连接线删除时触发
+      this.jsplumbInstance.bind("connectionDetached", function(connection) {
+        //console.log("连接线删除时触发");
+        // console.log(connection)
+        // _self.chartData.connections.forEach((conn, idx) => {
+        //   if (connection.sourceId === conn.sourceId && connection.targetId === conn.targetId) {
+        //     _self.chartData.connections.splice(idx, 1)
+        //   }
+        // });
+      });
+
+      // 监听拖动connection 事件，判断是否有重复链接
+      this.jsplumbInstance.bind("beforeDrop", function(info, event) {
+        console.log("监听拖动connection 事件，判断是否有重复链接");
+        // info.connection.getOverlay("label").setLabel(info.connection.id);
+        // console.log(info);
+        // console.log(event);
+        // console.log("节点之间连线变化", _self.chartData.connections);
+        _self.chartData.connections.push({
+          targetId: info.targetId,
+          sourceId: info.sourceId
+        });
+
+        console.log(_self.chartData);
+        console.log(JSON.stringify(_self.chartData));
+
+        // 判断是否已有该连接
+        // let isSame = true;
+        // _self.chartData.connections.forEach(item => {
+        //   if (
+        //     (item.targetId === info.targetId &&
+        //       item.sourceId === info.sourceId) ||
+        //     (item.targetId === info.sourceId && item.sourceId === info.targetId)
+        //   ) {
+        //     isSame = false;
+        //   }
+        // });
+        // if (isSame) {
+        //   _self.chartData.connections.push({
+        //     targetId: info.targetId,
+        //     sourceId: info.sourceId
+        //   });
+        // } else {
+        //   _self.$message.error("不允许重复连接！");
+        // }
+
+        // console.log(_self.chartData);
+        //return isSame;
+
+        return true;
       });
     },
     // 根据字段是否在数组 返回当前对象
@@ -427,10 +572,11 @@ export default {
         console.error(`${type} 类型不存在`);
         return;
       }
-      this.addEndpoint(element, current, type);
+     this.addEndpoint(element, current, type);
     },
     addEndpoint(element, current, type) {
       let index = 0;
+      let uuids = [];
       for (let value of current.stepInformation) {
         let labels = value.label ? value.label(type)[index++] : "";
         let sign = labels ? labels[1]["label"] + "_" + element : element;
@@ -443,89 +589,17 @@ export default {
               connectionType: {
                 type: value.type + "_" + sign
               },
-              uuid: value.type + "_" + sign,
+              uuids: value.type + "_" + element,
               overlays: labels ? [labels] : ""
             },
             this[value["style"]]
           );
         });
+
+        uuids.push(value.type + "_" + sign);
       }
-    },
-    // 连线成功
-    connectionSuccess() {
-      this.jsplumbInstance.bind("connection", connInfo => {
-        // 连线成功之后存储 links 数据 和 和 双击自己 是查找 source的词典
-        let tmp = this.querySourceMap[connInfo.targetId];
-        let _key = connInfo.targetEndpoint.connectionType.type;
-        // 存在的话 tmp 等于一个数组
-        if (tmp) {
-          tmp.push({
-            [_key]: connInfo.sourceId
-          });
-        } else {
-          // 如果不存在 数组 push 一条数据
-          this.querySourceMap[connInfo.targetId] = [
-            {
-              [_key]: connInfo.sourceId
-            }
-          ];
-        }
-        this.links.push({
-          source: connInfo.sourceEndpoint.connectionType.type,
-          target: connInfo.targetEndpoint.connectionType.type
-        });
-        // 去除重复的值
-        this.links = this.duplicateRemoval(this.links, "source");
-      });
-    },
-    // 默认连线
-    defaultConenction() {
-      this.$nextTick(() => {
-        jsPlumb.batch(() => {
-          this.links.forEach(item => {
-            this.jsplumbInstance.connect({
-              uuids: [item.source, item.target],
-              editable: true
-            });
-          });
-        }, true);
-      });
-    },
-    // 数组对象去重
-    duplicateRemoval(arr, _key) {
-      let map = new Map();
-      arr.forEach((item, index) => {
-        if (!map.has(item[_key])) {
-          map.set(item[_key], item);
-        }
-      });
-      return [...map.values()];
-    },
-    // 查找前查找是谁链接的自己 和判断是否已经连线
-    querySourceData(id, type) {
-      // source  sqlsource 特殊处理 没有连线也可以双击
-      if (type === "source" || type === "sqlsource") {
-        console.log("处理");
-        return true;
-      }
-      let querySource = this.querySourceMap[id];
-      // 没有连线
-      if (!querySource) {
-        console.log("没有连线");
-        return false;
-      }
-      let isLine = "";
-      // 如果能走到这 判断 是一根线 还是两根线  根据 getLabel 来判断 this.querySourceMap[id] 里边是一个值 还是两个值
-      if (this.getLable(type)) {
-        isLine = querySource.length === 2 ? querySource : false;
-      } else {
-        isLine = querySource.length === 1 ? querySource : false;
-      }
-      if (isLine) {
-        console.log("处理");
-      } else {
-        console.log("没有连线");
-      }
+
+      //return uuids;
     }
   }
 };
