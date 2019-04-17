@@ -5,7 +5,7 @@
         v-for="(item) in chartData.nodes"
         :id="item.id"
         :key="item.id"
-          :addEndpoint="customStep(item.id, item.type)"
+        :addEndpoint="customStep(item.id, item.type)"
         class="step-item"
         :style="{
         left: item.x +'px',
@@ -137,77 +137,56 @@ export default {
     // console.log("子组件 nextTick");
   },
   mounted() {
-    console.log("子组件 mounted");
-    this.init();
-
-    // this.init([
-    //           {
-    //       'id': 'source_1',
-    //       'name': 'source_1',
-    //       'type': 'source',
-    //       'x': 249,
-    //       'y': 162
-    //     },
-    //     ]);
-
-    // this.init([
-    // {
-    //       'id': 'source_1',
-    //       'name': 'source_1',
-    //       'type': 'source',
-    //       'x': 249,
-    //       'y': 162
-    //     },
-    //     {
-    //       'id': 'sink_1',
-    //       'name': 'sink_1',
-    //       'type': 'sink',
-    //       'x': 504,
-    //       'y': 156
-    //     },
-    //     {
-    //       'id': 'validate_1',
-    //       'name': 'validate_1',
-    //       'type': 'validate',
-    //       'x': 704,
-    //       'y': 256
-    //     },
-    //     {
-    //       'id': 'join_4',
-    //       'name': 'join_4',
-    //       'type': 'join',
-    //       'x': 204,
-    //       'y': 356
-    //     },
-    //     {
-    //       'id': 'transform_4',
-    //       'name': 'transform_4',
-    //       'type': 'transform',
-    //       'x': 504,
-    //       'y': 356
-    //     }]);
+    //console.log("子组件 mounted");
+    this.initJsplump(() => {
+      this.initFlow({
+        nodes: [
+          { id: "source_1", name: "source_1", type: "source", x: 249, y: 162 },
+          {
+            id: "7bf74499-2fee-4792-bfa0-ed047551e096",
+            name: "spark_join",
+            type: "join",
+            x: 747,
+            y: 177
+          },
+          {
+            id: "3e97cbdc-7b0e-4661-82e4-f3d9540c6b83",
+            name: "spark_source",
+            type: "source",
+            x: 113,
+            y: 294
+          }
+        ],
+        connections: [
+          //uuid: value.type + "_" + sign,
+          {
+            sourceId: "output_source_1", //类型 节点ID
+            targetId: "input_left_7bf74499-2fee-4792-bfa0-ed047551e096" //类型 锚点类型 ID
+          },
+          {
+            sourceId: "output_3e97cbdc-7b0e-4661-82e4-f3d9540c6b83",
+            targetId: "input_right_7bf74499-2fee-4792-bfa0-ed047551e096"
+          }
+        ],
+        props: {}
+      });
+    });
   },
-  updated(){
-      // this.$nextTick(() => {
-      //   this.customStep(item.id, item.type)
-      // });
+  updated() {
+    // this.$nextTick(() => {
+    //   this.customStep(item.id, item.type)
+    // });
   },
   methods: {
+    clearAllpanel() {
+      this.chartData = {
+        nodes: [],
+        connections: [],
+        props: {}
+      };
+      this.jsplumbInstance.deleteEveryEndpoint("workplace")
+    },
     handleDrop(data, event) {
-      //alert(`You dropped with data: ${JSON.stringify(data)}`);
-      // console.log(data);
-      // console.log(event);
-
-      // this.$refs.flowpanel.nodes.push({
-      //   id: data.item.id,
-      //   name: data.item.id,
-      //   type: data.item.name,
-      //   x: event.x,
-      //   y: event.y
-      // });
-
-      //  top: ui.position.top - 60 + "px",
-      //       left: ui.position.left - 200 + "px"
       let id = jsPlumbUtil.uuid();
       let currentItem = {
         id,
@@ -227,31 +206,20 @@ export default {
         console.log("拖动完成", this.chartData.nodes);
       });
     },
-    // 根据类型返回 ICON
-    returnIconByType(type) {
-      if (type === "sink") {
-        return "el-icon-printer";
-      } else if (type === "sqlsource" || type === "source") {
-        return "el-icon-share";
-      } else {
-        return "el-icon-news";
-      }
-    },
-    // 根据类型返回 color
-    returnColorByType(type) {
-      if (type === "sink") {
-        return "#8367df";
-      } else if (type === "sqlsource" || type === "source") {
-        return "#48c038";
-      } else {
-        return "#4586f3";
-      }
+
+    // jsplumb初始化
+    initJsplump(fn) {
+      jsPlumb.ready(() => {
+        this.jsplumbInstance = jsPlumb.getInstance();
+        this.jsplumbInstance.setContainer("workplace");
+        this.bindEvent();
+        fn();
+      });
     },
     // 初始化node节点
     initNode(item) {
       // initialise draggable elements.
-      // 元素拖动，基于 katavorio.js 插件
-      //console.log("初始化节点", el);
+      // 给每个元素添加拖拽事件
       let _self = this;
       this.jsplumbInstance.draggable(item.id, {
         filter: ".resize",
@@ -283,76 +251,33 @@ export default {
           // });
         }
       });
-
-      //        :addEndpoint="customStep(item.id, item.type)"
-
-        //this.customStep(item.id, item.type);
-
-      // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
-      // version of this demo to find out about new nodes being added.
-
-      //this.jsplumbInstance.fire("jsPlumbDemoNodeAdded", item.id);
     },
-    // 连线初始化配置
-    init() {
-      console.log("init");
-      jsPlumb.ready(() => {
-        // 数据集连线的实例111sdfdsgvfds
-
-        this.jsplumbInstance = jsPlumb.getInstance();
-        // this.jsplumbInstance.empty("step-list");
-        //  this.jsplumbInstance.empty("workplace");
-
-        //this.chartData.nodes = data;
-
-        this.jsplumbInstance.setContainer("workplace");
-        //jsPlumb.Defaults.Container = $('#workplace');
-
-        // jsPlumb.detachEveryConnection();
-
-        //  this.jsplumbInstance.deleteEveryEndpoint();
-
-        // this.jsplumbInstance.empty("workplace");
-        // 连线成功的处理
-
-        //this.connectionSuccess();
-        //this.defaultConenction();
-        // 给每个元素添加拖拽事件
-
-        this.bindEvent();
-
-        this.$nextTick(() => {
-          //jsPlumb.empty("workplace");
-          let element = this.jsplumbInstance.getSelector(".step-item");
-          this.jsplumbInstance.draggable(element);
-          this.jsplumbInstance.fire("jsPlumbDemoLoaded", this.jsplumbInstance);
-        });
-      });
-    },
-
     /**
      * @description 流程渲染
      * @param {data} 流程数据
      */
     draw(data) {
-      let uuids = [];
       data.nodes.forEach(item => {
-        uuids = this.initNode(item);
-
-        //console.log("///////////////uuids/////////////", uuids);
+        this.initNode(item);
       });
-      // this.jsp.empty();
       data.connections.forEach(item => {
-        // this.jsplumbInstance.connect({
-        //   source: item.sourceId,
-        //   target: item.targetId
-        // });
-        jsPlumb.connect({uuids:[item.sourceId,item.targetId]})
+        this.$nextTick(() => {
+          jsPlumb.batch(() => {
+            this.jsplumbInstance.connect({
+              uuids: [item.sourceId, item.targetId],
+              editable: true
+            });
+          }, true);
+        });
       });
+    },
 
+    initFlow(data) {
+      this.chartData = data;
 
-
-      //  this.jsplumbInstance.connect({uuids:["output_7bf74499-2fee-4792-bfa0-ed047551e096", "input_left_7bf74499-2fee-4792-bfa0-ed047551e096", "input_right_7bf74499-2fee-4792-bfa0-ed047551e096"]})
+      this.$nextTick(() => {
+        this.draw(data);
+      });
     },
 
     //jsplumb 事件监听
@@ -418,6 +343,27 @@ export default {
         return true;
       });
     },
+    // 根据类型返回 ICON
+    returnIconByType(type) {
+      if (type === "sink") {
+        return "el-icon-printer";
+      } else if (type === "sqlsource" || type === "source") {
+        return "el-icon-share";
+      } else {
+        return "el-icon-news";
+      }
+    },
+    // 根据类型返回 color
+    returnColorByType(type) {
+      if (type === "sink") {
+        return "#8367df";
+      } else if (type === "sqlsource" || type === "source") {
+        return "#48c038";
+      } else {
+        return "#4586f3";
+      }
+    },
+
     // 根据字段是否在数组 返回当前对象
     // 比如 type 是否在 array 数组中 type 中
     // array = [
@@ -432,7 +378,7 @@ export default {
         }
       }
     },
-    getLable(type) {
+    getRightLable(type) {
       // 按文字分类
       // 右边两个点 yes no
       let step = [
@@ -447,7 +393,36 @@ export default {
           type: ["validate"],
           text: ["ok", "error"],
           location: [[2, -0.5], [2.5, 1.2]]
-        },
+        }
+      ];
+      let current = this.getCurrentObj(type, step);
+      if (!current) {
+        return false;
+      }
+      return [
+        [
+          "Label",
+          {
+            label: current.text[0],
+            id: "label-1",
+            cssClass: "aLabel",
+            location: current.location[0]
+          }
+        ],
+        [
+          "Label",
+          {
+            label: current.text[1],
+            id: "label-2",
+            cssClass: "aLabel",
+            location: current.location[1]
+          }
+        ]
+      ];
+    },
+    getLeftLable(type) {
+      // 按文字分类
+      let step = [
         // 左边连个点 left right
         {
           type: ["join", "productjion"],
@@ -512,13 +487,13 @@ export default {
             {
               position: [1, 0.3, 0, 0],
               style: "origin",
-              label: this.getLable,
+              label: this.getRightLable,
               type: "output"
             },
             {
               position: [1, 0.7, 0, 0],
               style: "origin",
-              label: this.getLable,
+              label: this.getRightLable,
               type: "output"
             }
           ],
@@ -532,13 +507,13 @@ export default {
             {
               position: [0, 0.3, 0, 0],
               style: "destination",
-              label: this.getLable,
+              label: this.getLeftLable,
               type: "input"
             },
             {
               position: [0, 0.7, 0, 0],
               style: "destination",
-              label: this.getLable,
+              label: this.getLeftLable,
               type: "input"
             }
           ],
@@ -572,11 +547,10 @@ export default {
         console.error(`${type} 类型不存在`);
         return;
       }
-     this.addEndpoint(element, current, type);
+      this.addEndpoint(element, current, type);
     },
     addEndpoint(element, current, type) {
       let index = 0;
-      let uuids = [];
       for (let value of current.stepInformation) {
         let labels = value.label ? value.label(type)[index++] : "";
         let sign = labels ? labels[1]["label"] + "_" + element : element;
@@ -587,19 +561,65 @@ export default {
               anchors: value.position,
               maxConnections: current.maxConnections,
               connectionType: {
-                type: value.type + "_" + sign
+                sourceType: value.type + "_" + sign,
+                targetType: value.type + "_" + sign
               },
-              uuids: value.type + "_" + element,
+              uuid: value.type + "_" + sign,
               overlays: labels ? [labels] : ""
             },
             this[value["style"]]
           );
         });
-
-        uuids.push(value.type + "_" + sign);
       }
+    },
 
-      //return uuids;
+    // 数组对象去重
+    duplicateRemoval(arr, _key) {
+      let map = new Map();
+      arr.forEach((item, index) => {
+        if (!map.has(item[_key])) {
+          map.set(item[_key], item);
+        }
+      });
+      return [...map.values()];
+    },
+    // 查找前查找是谁链接的自己 和判断是否已经连线
+    querySourceData(id, type) {
+      // source  sqlsource 特殊处理 没有连线也可以双击
+      if (type === "source" || type === "sqlsource") {
+        console.log("处理");
+        return true;
+      }
+      let querySource = this.querySourceMap[id];
+      // 没有连线
+      if (!querySource) {
+        console.log("没有数据");
+        return false;
+      }
+      let isLine = "";
+      // 如果能走到这 判断 是一根线 还是两根线  根据 getLabel 来判断 this.querySourceMap[id] 里边是一个值 还是两个值
+      // 获取label
+      let getLable = this.getLeftLable(type);
+      if (getLable) {
+        isLine = querySource.length === 2;
+        if (!isLine) {
+          console.log("没有连线");
+          return false;
+        }
+        for (let index in querySource) {
+          let text = getLable[index][1]["label"] + "_";
+          console.log(querySource[index]);
+          console.log(querySource[index]["input_" + text + id]);
+        }
+      } else {
+        console.log(querySource);
+        isLine = querySource.length === 1;
+        if (!isLine) {
+          console.log("没有连线");
+          return false;
+        }
+        console.log(querySource[0]["input_" + id]);
+      }
     }
   }
 };
