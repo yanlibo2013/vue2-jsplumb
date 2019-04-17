@@ -127,7 +127,88 @@ export default {
         isTarget: true, // 是否可以放置（连线终点）
         maxConnections: 1, // 设置连接点最多可以连接几条线,-1表示无限大
         connectorOverlays: [["Arrow", { width: 10, length: 10, location: 1 }]]
-      }
+      },
+      archor: {},
+      step: [
+        // 只有左边一个点
+        {
+          type: ["sink"],
+          stepInformation: [
+            { position: "Left", style: "destination", type: "input" }
+          ],
+          maxConnections: 1
+        },
+        // 右边一个点
+        {
+          type: ["sqlsource", "source"],
+          stepInformation: [
+            { position: "Right", style: "origin", type: "output" }
+          ],
+          maxConnections: 100
+        },
+        // 左边一个点， 右边两个点
+        {
+          type: ["decision", "validate", "split"],
+          stepInformation: [
+            { position: "Left", style: "destination", type: "input" },
+            {
+              position: [1, 0.3, 0, 0],
+              style: "origin",
+              label: this.getRightLable,
+              type: "output"
+            },
+            {
+              position: [1, 0.7, 0, 0],
+              style: "origin",
+              label: this.getRightLable,
+              type: "output"
+            }
+          ],
+          maxConnections: 1
+        },
+        // 左边两个点， 右边一个点
+        {
+          type: ["minus", "join", "lookup", "productjoin"],
+          stepInformation: [
+            { position: "Right", style: "origin", type: "output" },
+            {
+              position: [0, 0.3, 0, 0],
+              style: "destination",
+              label: this.getLeftLable,
+              type: "input"
+            },
+            {
+              position: [0, 0.7, 0, 0],
+              style: "destination",
+              label: this.getLeftLable,
+              type: "input"
+            }
+          ],
+          maxConnections: 1
+        },
+        // 左右两个点
+        {
+          type: [
+            "supplement",
+            "sample",
+            "filter",
+            "sql",
+            "transform",
+            "aggregate",
+            "top",
+            "lookupTable",
+            "intersect",
+            "union",
+            "lookup",
+            "starjoin"
+          ],
+          stepInformation: [
+            { position: "Left", style: "destination", type: "input" },
+            { position: "Right", style: "origin", type: "output" }
+          ],
+          maxConnections: 1
+        }
+      ]
     };
   },
 
@@ -139,37 +220,37 @@ export default {
   mounted() {
     //console.log("子组件 mounted");
     this.initJsplump(() => {
-      this.initFlow({
-        nodes: [
-          { id: "source_1", name: "source_1", type: "source", x: 249, y: 162 },
-          {
-            id: "7bf74499-2fee-4792-bfa0-ed047551e096",
-            name: "spark_join",
-            type: "join",
-            x: 747,
-            y: 177
-          },
-          {
-            id: "3e97cbdc-7b0e-4661-82e4-f3d9540c6b83",
-            name: "spark_source",
-            type: "source",
-            x: 113,
-            y: 294
-          }
-        ],
-        connections: [
-          //uuid: value.type + "_" + sign,
-          {
-            sourceId: "output_source_1", //类型 节点ID
-            targetId: "input_left_7bf74499-2fee-4792-bfa0-ed047551e096" //类型 锚点类型 ID
-          },
-          {
-            sourceId: "output_3e97cbdc-7b0e-4661-82e4-f3d9540c6b83",
-            targetId: "input_right_7bf74499-2fee-4792-bfa0-ed047551e096"
-          }
-        ],
-        props: {}
-      });
+      // this.initFlow({
+      //   nodes: [
+      //     { id: "source_1", name: "source_1", type: "source", x: 249, y: 162 },
+      //     {
+      //       id: "7bf74499-2fee-4792-bfa0-ed047551e096",
+      //       name: "spark_join",
+      //       type: "join",
+      //       x: 747,
+      //       y: 177
+      //     },
+      //     {
+      //       id: "3e97cbdc-7b0e-4661-82e4-f3d9540c6b83",
+      //       name: "spark_source",
+      //       type: "source",
+      //       x: 113,
+      //       y: 294
+      //     }
+      //   ],
+      //   connections: [
+      //     //uuid: value.type + "_" + sign,
+      //     {
+      //       sourceId: "output_source_1", //类型 节点ID
+      //       targetId: "input_left_7bf74499-2fee-4792-bfa0-ed047551e096" //类型 锚点类型 ID
+      //     },
+      //     {
+      //       sourceId: "output_3e97cbdc-7b0e-4661-82e4-f3d9540c6b83",
+      //       targetId: "input_right_7bf74499-2fee-4792-bfa0-ed047551e096"
+      //     }
+      //   ],
+      //   props: {}
+      // });
     });
   },
   updated() {
@@ -184,7 +265,7 @@ export default {
         connections: [],
         props: {}
       };
-      this.jsplumbInstance.deleteEveryEndpoint("workplace")
+      this.jsplumbInstance.deleteEveryEndpoint("workplace");
     },
     handleDrop(data, event) {
       let id = jsPlumbUtil.uuid();
@@ -196,7 +277,16 @@ export default {
         y: event.screenY - 200
       };
 
+      // console.log("添加节点");
+      // console.log(data);
+      // console.log(event);
+      // this.customStep(currentItem);
+      // console.log("当前锚点",this.archor);
+      console.log(this.getCurrentObj(currentItem.type, this.step));
+      //return;
+
       this.chartData.nodes.push(currentItem);
+      this.archor = {};
 
       this.$nextTick(() => {
         //console.log(this.steps);
@@ -306,12 +396,12 @@ export default {
       this.jsplumbInstance.bind("beforeDrop", function(info, event) {
         console.log("监听拖动connection 事件，判断是否有重复链接");
         // info.connection.getOverlay("label").setLabel(info.connection.id);
-        // console.log(info);
+        console.log(info);
         // console.log(event);
         // console.log("节点之间连线变化", _self.chartData.connections);
         _self.chartData.connections.push({
-          targetId: info.targetId,
-          sourceId: info.sourceId
+          sourceId: info.sourceId,
+          targetId: info.targetId
         });
 
         console.log(_self.chartData);
@@ -462,87 +552,7 @@ export default {
       ];
     },
     customStep(element, type) {
-      let step = [
-        // 只有左边一个点
-        {
-          type: ["sink"],
-          stepInformation: [
-            { position: "Left", style: "destination", type: "input" }
-          ],
-          maxConnections: 1
-        },
-        // 右边一个点
-        {
-          type: ["sqlsource", "source"],
-          stepInformation: [
-            { position: "Right", style: "origin", type: "output" }
-          ],
-          maxConnections: 100
-        },
-        // 左边一个点， 右边两个点
-        {
-          type: ["decision", "validate", "split"],
-          stepInformation: [
-            { position: "Left", style: "destination", type: "input" },
-            {
-              position: [1, 0.3, 0, 0],
-              style: "origin",
-              label: this.getRightLable,
-              type: "output"
-            },
-            {
-              position: [1, 0.7, 0, 0],
-              style: "origin",
-              label: this.getRightLable,
-              type: "output"
-            }
-          ],
-          maxConnections: 1
-        },
-        // 左边两个点， 右边一个点
-        {
-          type: ["minus", "join", "lookup", "productjoin"],
-          stepInformation: [
-            { position: "Right", style: "origin", type: "output" },
-            {
-              position: [0, 0.3, 0, 0],
-              style: "destination",
-              label: this.getLeftLable,
-              type: "input"
-            },
-            {
-              position: [0, 0.7, 0, 0],
-              style: "destination",
-              label: this.getLeftLable,
-              type: "input"
-            }
-          ],
-          maxConnections: 1
-        },
-        // 左右两个点
-        {
-          type: [
-            "supplement",
-            "sample",
-            "filter",
-            "sql",
-            "transform",
-            "aggregate",
-            "top",
-            "lookupTable",
-            "intersect",
-            "union",
-            "lookup",
-            "starjoin"
-          ],
-          stepInformation: [
-            { position: "Left", style: "destination", type: "input" },
-            { position: "Right", style: "origin", type: "output" }
-          ],
-          maxConnections: 1
-        }
-      ];
-      let current = this.getCurrentObj(type, step);
+      let current = this.getCurrentObj(type, this.step);
       if (!current) {
         console.error(`${type} 类型不存在`);
         return;
@@ -570,6 +580,17 @@ export default {
             this[value["style"]]
           );
         });
+        // this.archor={
+        //     type:value.type,
+        //     labels:labels
+        //   }
+
+        // console.log("=============",{
+        //   type:value.type,
+        //   labels:labels
+        // });
+
+        // console.log("current",current);
       }
     },
 
