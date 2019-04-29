@@ -220,37 +220,37 @@ export default {
   mounted() {
     //console.log("子组件 mounted");
     this.initJsplump(() => {
-      // this.initFlow({
-      //   nodes: [
-      //     { id: "source_1", name: "source_1", type: "source", x: 249, y: 162 },
-      //     {
-      //       id: "7bf74499-2fee-4792-bfa0-ed047551e096",
-      //       name: "spark_join",
-      //       type: "join",
-      //       x: 747,
-      //       y: 177
-      //     },
-      //     {
-      //       id: "3e97cbdc-7b0e-4661-82e4-f3d9540c6b83",
-      //       name: "spark_source",
-      //       type: "source",
-      //       x: 113,
-      //       y: 294
-      //     }
-      //   ],
-      //   connections: [
-      //     //uuid: value.type + "_" + sign,
-      //     {
-      //       sourceId: "output_source_1", //类型 节点ID
-      //       targetId: "input_left_7bf74499-2fee-4792-bfa0-ed047551e096" //类型 锚点类型 ID
-      //     },
-      //     {
-      //       sourceId: "output_3e97cbdc-7b0e-4661-82e4-f3d9540c6b83",
-      //       targetId: "input_right_7bf74499-2fee-4792-bfa0-ed047551e096"
-      //     }
-      //   ],
-      //   props: {}
-      // });
+      this.initFlow({
+        nodes: [
+          { id: "source_1", name: "source_1", type: "source", x: 249, y: 162 },
+          {
+            id: "7bf74499-2fee-4792-bfa0-ed047551e096",
+            name: "spark_join",
+            type: "join",
+            x: 747,
+            y: 177
+          },
+          {
+            id: "3e97cbdc-7b0e-4661-82e4-f3d9540c6b83",
+            name: "spark_source",
+            type: "source",
+            x: 113,
+            y: 294
+          }
+        ],
+        connections: [
+          //uuid: value.type + "_" + sign,
+          {
+            sourceId: "output_source_1", //类型 节点ID
+            targetId: "input_left_7bf74499-2fee-4792-bfa0-ed047551e096" //类型 锚点类型 ID
+          },
+          {
+            sourceId: "output_3e97cbdc-7b0e-4661-82e4-f3d9540c6b83",
+            targetId: "input_right_7bf74499-2fee-4792-bfa0-ed047551e096"
+          }
+        ],
+        props: {}
+      });
     });
   },
   updated() {
