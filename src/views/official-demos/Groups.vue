@@ -198,12 +198,15 @@ export default {
         _appendEvent("group:addMember", p.group.id + " - " + p.el.id);
       });
       j.bind("group:removeMember", function (p) {
+        console.log(' j.bind("group:removeMember", function (p) {');
         _appendEvent("group:removeMember", p.group.id + " - " + p.el.id);
       });
       j.bind("group:expand", function (p) {
+        console.log(' j.bind("group:expand", function (p) {');
         _appendEvent("group:expand", p.group.id);
       });
       j.bind("group:collapse", function (p) {
+        console.log(' j.bind("group:collapse", function (p) {');
         _appendEvent("group:collapse", p.group.id);
       });
       j.bind("group:add", function (p) {

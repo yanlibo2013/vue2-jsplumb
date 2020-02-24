@@ -22,7 +22,7 @@ export default {
     jsPlumb.ready(function() {
       var instance = (window.jsp = jsPlumb.getInstance({
         // default drag options
-        DragOptions: { cursor: "pointer", zIndex: 2000 },
+        DragOptions: { cursor: "default", zIndex: 2000 },
         // the overlays to decorate each connection with.  note that the label overlay uses a function to generate the label text; in this
         // case it returns the 'labelText' member that we set on each connection in the 'init' method below.
         ConnectionOverlays: [
@@ -283,7 +283,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
+  cursor: default;
   text-align: center;
   z-index: 20;
   position: absolute;
@@ -342,7 +342,7 @@ export default {
 .endpointTargetLabel,
 .endpointSourceLabel {
   z-index: 21;
-  cursor: pointer;
+  cursor: default;
 }
 
 .flowchart-demo .aLabel {
@@ -353,7 +353,7 @@ export default {
   z-index: 21;
   border: 1px dotted gray;
   opacity: 0.8;
-  cursor: pointer;
+  cursor: default;
 }
 
 .flowchart-demo .aLabel.jtk-hover {
@@ -372,7 +372,7 @@ export default {
 
 path,
 .jtk-endpoint {
-  cursor: pointer;
+  cursor: default;
 }
 
 .jtk-overlay {

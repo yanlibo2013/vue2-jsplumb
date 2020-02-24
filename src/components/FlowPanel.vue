@@ -269,6 +269,7 @@ export default {
     },
     handleDrop(data, event) {
       let id = jsPlumbUtil.uuid();
+      
       let currentItem = {
         id,
         name: data.item.id,
