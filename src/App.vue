@@ -7,18 +7,16 @@
       <el-main class="container">
         <router-view></router-view>
       </el-main>
-      
     </el-container>
   </div>
 </template>
 
 <script>
-import MyHeader from './components/MyHeader'
+import MyHeader from "./components/MyHeader";
 export default {
   name: "App",
-  components:{
+  components: {
     MyHeader
   }
 };
 </script>
-

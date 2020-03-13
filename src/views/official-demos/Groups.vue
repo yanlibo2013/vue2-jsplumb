@@ -1,10 +1,10 @@
 <template>
   <div class="jtk-demo">
-    <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface jtk-surface-nopan"
-         id="canvas">
-      <div class="group-container"
-           id="container1"
-           group="one">
+    <div
+      class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface jtk-surface-nopan"
+      id="canvas"
+    >
+      <div class="group-container" id="container1" group="one">
         <div class="title"></div>
         <!-- <ul>
           <li>Elements constrained to group (
@@ -14,42 +14,36 @@
           <li>Not droppable (
             <strong>droppable:false</strong>)</li>
         </ul> -->
-        <div class="del"
-             delete-all></div>
+
+        <div class="del" delete-all></div>
         <div class="node-collapse"></div>
-        <div id="c1_1"
-             class="w"
-             style="left:30px;top:35px">1.1</div>
+        <div id="c1_1" class="w" style="left:30px;top:35px">1.1</div>
       </div>
 
-      <div class="group-container"
-           id="container2"
-           group="two">
+      <!-- <div class="group-container" id="container2" group="two">
         <div class="title"></div>
-        <!-- <ul>
+        <ul>
           <li>Elements are reverted on drop outside (
             <strong>revert:true</strong>)</li>
           <li>Elements not draggable to other groups (
             <strong>dropOverride:true</strong>)</li>
           <li>Deletes group only</li>
-        </ul> -->
+        </ul>
         <div class="del" delete-all></div>
         <div class="node-collapse"></div>
-        <div id="c2_1"
-             class="w"
-             style="left:30px;top:40px">2.1</div>
-      </div>
+        <div id="c2_1" class="w" style="left:30px;top:40px">2.1</div>
+      </div> -->
     </div>
   </div>
 </template>
 <script>
 export default {
   name: "Groups",
-  data () {
+  data() {
     return {};
   },
-  mounted () {
-    jsPlumb.ready(function () {
+  mounted() {
+    jsPlumb.ready(function() {
       var j = (window.j = jsPlumb.getInstance({
         Container: canvas,
         Connector: "StateMachine",
@@ -57,8 +51,8 @@ export default {
         Anchor: "Center"
       }));
 
-      j.bind("connection", function (p) {
-        p.connection.bind("click", function () {
+      j.bind("connection", function(p) {
+        p.connection.bind("click", function() {
           j.detach(this);
         });
       });
@@ -73,82 +67,80 @@ export default {
       //     "<br/>" +
       //     evts.innerHTML;
       // };
-      j.bind("group:addMember", function (p) {
-        console.log(p)
+      j.bind("group:addMember", function(p) {
+        console.log(p);
         //_appendEvent("group:addMember", p.group.id + " - " + p.el.id);
       });
-      j.bind("group:removeMember", function (p) {
+      j.bind("group:removeMember", function(p) {
         console.log(' j.bind("group:removeMember", function (p) {');
         //_appendEvent("group:removeMember", p.group.id + " - " + p.el.id);
       });
-      j.bind("group:expand", function (p) {
+      j.bind("group:expand", function(p) {
         console.log(' j.bind("group:expand", function (p) {');
         //_appendEvent("group:expand", p.group.id);
       });
-      j.bind("group:collapse", function (p) {
-        console.log(' j.bind("group:collapse", function (p) {');
+      j.bind("group:collapse", function(p) {
+        //console.log(' j.bind("group:collapse", function (p) {');
         //_appendEvent("group:collapse", p.group.id);
       });
-      j.bind("group:add", function (p) {
+      j.bind("group:add", function(p) {
         //_appendEvent("group:add", p.group.id);
       });
-      j.bind("group:remove", function (p) {
-       // _appendEvent("group:remove", p.group.id);
+      j.bind("group:remove", function(p) {
+        // _appendEvent("group:remove", p.group.id);
       });
 
-      // connect some before configuring group
-      j.connect({ source: c1_1, target: c2_1 });
+      //j.connect({ source: c1_1, target: c2_1 });
 
-      // NOTE ordering here. we make one draggable before adding it to the group, and we add the other to the group
-      //before making it draggable. they should both be constrained to the group extents.
+      console.log("container1",container1);
+
       j.draggable(c1_1);
       j.addGroup({
         el: container1,
         id: "one",
         constrain: true,
-        anchor: "Continuous",
-        endpoint: "Blank",
-        droppable: false
+        // anchor: "Continuous",
+        // endpoint: "Blank",
+        // droppable: false
       });
-      j.addToGroup("one", c1_1);
+     j.addToGroup("one", c1_1);
 
-      j.draggable(c2_1);
-      j.addGroup({
-        el: container2,
-        id: "two",
-          constrain: true,
-           droppable: false,
-        // dropOverride: true,
-        dropOptions: {
-          drop(p) {
-            console.log(p)
-          }
-        },
-        endpoint: ["Dot", { radius: 3 }]
-      }); //(the default is to revert)
-      j.addToGroup("two", c2_1);
-    
-      // the independent element that demonstrates the fact that it can be dropped onto a group
-      j.draggable("standalone");
+    //   j.draggable(c2_1);
+    //   j.addGroup({
+    //     el: container2,
+    //     id: "two",
+    //     constrain: true,
+    //     droppable: false,
+    //     dropOptions: {
+    //       drop(p) {
+    //         console.log(p);
+    //       }
+    //     },
+    //     endpoint: ["Dot", { radius: 3 }]
+    //   });
+    //   j.addToGroup("two", c2_1);
 
-      //... and connect others afterwards.
-
-      // delete group button
-      j.on(canvas, "click", ".del", function () {
+    //   j.draggable("standalone");
+      j.on(canvas, "click", ".del", function() {
         var g = this.parentNode.getAttribute("group");
         j.removeGroup(g, this.getAttribute("delete-all") != null);
       });
 
       // collapse/expand group button
-      j.on(canvas, "click", ".node-collapse", function () {
+      j.on(canvas, "click", ".node-collapse", function() {
         var g = this.parentNode.getAttribute("group"),
           collapsed = j.hasClass(this.parentNode, "collapsed");
 
         j[collapsed ? "removeClass" : "addClass"](this.parentNode, "collapsed");
         j[collapsed ? "expandGroup" : "collapseGroup"](g);
+
+        console.log("g",g);
+        console.log("j",j);
+        console.log("collapsed",collapsed);
+        console.log("this.parentNode",this.parentNode);
       });
 
-      jsPlumb.fire("jsPlumbDemoLoaded", j);
+    //   jsPlumb.fire("jsPlumbDemoLoaded", j);
     });
   }
 };
@@ -194,10 +186,10 @@ export default {
   margin-bottom: 7px;
 }
 
-.large {
+/* .large {
   width: 600px;
   height: 600px;
-}
+} */
 
 .group-container.collapsed {
   height: 40px;
@@ -290,7 +282,7 @@ export default {
 .jtk-drag-hover {
   outline: 4px solid cornflowerblue;
 }
-
+/* 
 .katavorio-ghost-proxy {
   outline: 2px solid red;
 }
@@ -322,5 +314,5 @@ export default {
 .events h3 {
   font-size: 20px;
   margin-top: 10px;
-}
+} */
 </style>

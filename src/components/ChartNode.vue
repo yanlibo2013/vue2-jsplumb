@@ -1,7 +1,13 @@
 <template>
-  <div class="workplace-chart" :id="id" :style="nodeStyle" @dblclick="handleNodeDbclick">
-    <i :class="[icon,type]"></i>
-    <span>{{text}}</span>
+  <div
+    class="workplace-chart"
+    :id="id"
+    :style="nodeStyle"
+    @dblclick="handleNodeDbclick"
+  >
+    <i :class="[icon, type]"></i>
+    <span>{{ text }}</span>
+
     <div class="ep"></div>
   </div>
 </template>
@@ -34,7 +40,7 @@ export default {
   },
   methods: {
     handleNodeDbclick() {
-      this.$emit("edit")
+      this.$emit("edit");
     }
   }
 };
@@ -97,5 +103,3 @@ export default {
   }
 }
 </style>
-
-
